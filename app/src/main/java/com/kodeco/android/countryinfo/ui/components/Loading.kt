@@ -6,17 +6,26 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.kodeco.android.countryinfo.flow.Flows
+import com.kodeco.android.countryinfo.ui.components.countryinfo.CountryInfoViewModel
 
 @Composable
-fun Loading() {
-    // TODO: Remove the reference to Flows here and simply pass in a `counter` value as
-    //  an Int in to this Loading composable function.
-    val counter = Flows.counterFlow.collectAsState(initial = 0)
+fun Loading(viewModel: CountryInfoViewModel?) {
+
+    var uptime by remember { mutableStateOf(0) }
+    LaunchedEffect(key1= "uptime") {
+        viewModel?.counterFlow?.collect {
+            uptime = it
+        }
+    }
 
     Column(
         modifier = Modifier.fillMaxSize(),
@@ -24,7 +33,7 @@ fun Loading() {
         verticalArrangement = Arrangement.Center,
     ) {
 
-        Text(text = "Loading... App uptime: ${counter.value}")
+        Text(text = "Loading... App uptime: ${uptime}")
         CircularProgressIndicator()
     }
 }
@@ -32,5 +41,5 @@ fun Loading() {
 @Preview
 @Composable
 fun LoadingPreview() {
-    Loading()
+    Loading(null)
 }

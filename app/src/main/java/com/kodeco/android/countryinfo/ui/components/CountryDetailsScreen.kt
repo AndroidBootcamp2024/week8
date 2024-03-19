@@ -20,14 +20,15 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
-import com.kodeco.android.countryinfo.flow.Flows
 import com.kodeco.android.countryinfo.models.Country
 import com.kodeco.android.countryinfo.sample.sampleCountry
+import com.kodeco.android.countryinfo.ui.components.countryinfo.CountryInfoViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CountryDetailsScreen(
     country: Country,
+    viewModel: CountryInfoViewModel?,
     onNavigateUp: () -> Unit,
 ) {
     Scaffold(
@@ -38,8 +39,7 @@ fun CountryDetailsScreen(
                 },
                 navigationIcon = {
                     IconButton(onClick = {
-                        // TODO: Remove as Flows is no longer necessary.
-                        Flows.tapBack()
+                        viewModel?.tapBack()
                         onNavigateUp()
                     }) {
                         Icon(
@@ -75,6 +75,7 @@ fun CountryDetailsScreen(
 fun CountryDetailsScreenPreview() {
     CountryDetailsScreen(
         country = sampleCountry,
+        null,
         onNavigateUp = {},
     )
 }
