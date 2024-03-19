@@ -37,7 +37,6 @@ fun Loading(viewModel: CountryInfoViewModel?) {
         CircularProgressIndicator()
     }
 }
-
 @Preview
 @Composable
 fun LoadingPreview() {
