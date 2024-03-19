@@ -20,20 +20,20 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.kodeco.android.countryinfo.flow.Flows
 import com.kodeco.android.countryinfo.models.Country
 import com.kodeco.android.countryinfo.sample.sampleCountries
+import com.kodeco.android.countryinfo.ui.components.countryinfo.CountryInfoViewModel
 
 @Composable
 fun CountryInfoList(
     countries: List<Country>,
+    viewModel: CountryInfoViewModel?,
     onRefreshClick: () -> Unit,
 ) {
     var selectedCountry: Country? by remember { mutableStateOf(null) }
 
-    // TODO: Replace these with standard `remember`ed objects that utilize `mutableStateOf()`
-    val tapCounter = Flows.tapFlow.collectAsState()
-    val backCounter = Flows.backFlow.collectAsState()
+    val tapCounter = viewModel?.tapFlow?.collectAsState()
+    val backCounter = viewModel?.backFlow?.collectAsState()
 
     Column {
         Row(
@@ -44,7 +44,7 @@ fun CountryInfoList(
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Text(
-                text = "Taps: ${tapCounter.value}",
+                text = "Taps: ${tapCounter?.value}",
                 textAlign = TextAlign.Start,
             )
             Button(
@@ -53,23 +53,21 @@ fun CountryInfoList(
                 Text(text = "Refresh")
             }
             Text(
-                text = "Back: ${backCounter.value}",
+                text = "Back: ${backCounter?.value}",
                 textAlign = TextAlign.End,
             )
         }
 
         selectedCountry?.let { country ->
-            CountryDetailsScreen(country) {
+            CountryDetailsScreen(country, viewModel) {
                 selectedCountry = null
-                // TODO: Make sure to increment backCounter.value
             }
         } ?: run {
             LazyColumn {
                 items(countries) { country ->
                     CountryInfoRow(country) {
                         selectedCountry = country
-                        // TODO: Replace with an increment of tapCounter.value
-                        Flows.tap()
+                        viewModel?.tap()
                     }
                 }
             }
@@ -82,6 +80,7 @@ fun CountryInfoList(
 fun CountryInfoListPreview() {
     CountryInfoList(
         countries = sampleCountries,
+        null,
         onRefreshClick = {},
     )
 }
